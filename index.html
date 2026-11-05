@@ -278,18 +278,6 @@
             <span class="err-msg">Selecione uma opção.</span>
           </fieldset>
 
-          <fieldset class="field" data-req="fat">
-            <legend class="q"><span data-alt="Faturamento anual do escritório">Faturamento anual da empresa</span> <span class="req">*</span></legend>
-            <div class="chips">
-              <label class="chip"><input type="radio" name="fat" value="Até R$ 4,8 milhões"><span>Até R$ 4,8 milhões</span></label>
-              <label class="chip"><input type="radio" name="fat" value="De R$ 4,8 a 50 milhões"><span>De R$ 4,8 a 50 milhões</span></label>
-              <label class="chip"><input type="radio" name="fat" value="De R$ 50 a 300 milhões"><span>De R$ 50 a 300 milhões</span></label>
-              <label class="chip"><input type="radio" name="fat" value="Acima de R$ 300 milhões"><span>Acima de R$ 300 milhões</span></label>
-              <label class="chip"><input type="radio" name="fat" value="Prefiro não informar"><span>Prefiro não informar</span></label>
-            </div>
-            <span class="err-msg">Selecione uma opção.</span>
-          </fieldset>
-
           <fieldset class="field" data-req="segmento">
             <legend class="q"><span data-alt="Segmento da maioria dos seus clientes">Segmento</span> <span class="req">*</span></legend>
             <div class="chips">
@@ -434,23 +422,11 @@
           <h2 class="step-title">Seus dados</h2>
           <p class="step-sub">Para o time da Jornada Tax falar com você sobre o próximo passo.</p>
 
-          <div class="field" id="f-nome">
-            <label class="q" for="nome">Nome completo <span class="req">*</span></label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome e sobrenome" autocomplete="name">
-            <span class="err-msg">Informe seu nome.</span>
-          </div>
-
-          <div class="field" id="f-empresa">
-            <label class="q" for="empresa">Nome da empresa <span class="req">*</span></label>
-            <input type="text" id="empresa" name="empresa" placeholder="Razão social ou nome fantasia" autocomplete="organization">
-            <span class="err-msg">Informe o nome da empresa.</span>
-          </div>
-
           <div class="row2">
-            <div class="field" id="f-email">
-              <label class="q" for="email">E-mail corporativo <span class="req">*</span></label>
-              <input type="email" id="email" name="email" placeholder="voce@empresa.com.br" autocomplete="email" inputmode="email">
-              <span class="err-msg">Informe um e-mail válido.</span>
+            <div class="field" id="f-nome">
+              <label class="q" for="nome">Nome <span class="req">*</span></label>
+              <input type="text" id="nome" name="nome" placeholder="Seu nome e sobrenome" autocomplete="name">
+              <span class="err-msg">Informe seu nome.</span>
             </div>
             <div class="field" id="f-tel">
               <label class="q" for="whatsapp">WhatsApp com DDD <span class="req">*</span></label>
@@ -539,8 +515,6 @@
     var GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeo-_FjJ2miinNr4nendZ-wx6SwrZIr-V02l6S7gvXC5724hw/formResponse';
     var ENTRY = {
       nome:        'entry.1788701340',
-      empresa:     'entry.1454380723',
-      email:       'entry.1609258977',
       whatsapp:    'entry.1116054155',
       cargo:       'entry.1797540661',
       temperatura: 'entry.1478410252',
@@ -551,7 +525,6 @@
       rota:        'entry.1017226372',
       org:         'entry.1256766146',
       regime:      'entry.636431812',
-      fat:         'entry.1046595155',
       segmento:    'entry.1512032808',
       equipe:      'entry.612490427',
       estagio:     'entry.775478789',
@@ -600,7 +573,6 @@
     function many(name) { return Array.prototype.map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
     function has(arr, v) { return arr.indexOf(v) !== -1; }
     function digits(s) { return (s || '').replace(/\D/g, ''); }
-    function validEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
 
     // Texto alternativo para escritório contábil (fala dos clientes, não da empresa)
     var alts = Array.prototype.slice.call(document.querySelectorAll('[data-alt]'));
@@ -670,8 +642,6 @@
       if (i === steps.length - 1) {
         var checks = [
           ['f-nome',    !!document.getElementById('nome').value.trim()],
-          ['f-empresa', !!document.getElementById('empresa').value.trim()],
-          ['f-email',   validEmail(document.getElementById('email').value.trim())],
           ['f-tel',     digits(tel.value).length >= 10],
           ['f-consent', document.getElementById('consent').checked]
         ];
@@ -721,9 +691,10 @@
       var temCons  = has(a.apoio, 'Consultoria contratada');
       var temFerr  = has(a.apoio, 'Ferramenta de simulação');
       var mapeando = a.estagio === 'Mapeando os impactos' || a.estagio === 'Impacto medido, implementando';
-      var grande   = a.fat === 'De R$ 50 a 300 milhões' || a.fat === 'Acima de R$ 300 milhões';
+      // Sem faturamento: o porte vem do tamanho da equipe fiscal e do regime
+      var grande   = a.equipe === 'Mais de 10' || (a.regime === 'Lucro Real' && a.equipe === '3 a 10');
       var equipeGrande = a.equipe === '3 a 10' || a.equipe === 'Mais de 10';
-      var trein    = (equipeGrande || grande) ? OF.IC : OF.GC_EQ;
+      var trein    = equipeGrande ? OF.IC : OF.GC_EQ;
       var semNumeroNaDiretoria = a.diretoria !== 'Sim, com números';
       var r = { rota: '', principal: '', secundaria: '', abordagem: '', sinais: [] };
 
@@ -737,11 +708,11 @@
         r.principal = OF.PARC;
         r.secundaria = OF.GC_EQ;
         r.abordagem = 'Pode ser canal. Entender a carteira e o que já entregam na Reforma. Abrir pela parceria (ARK e indicação) antes de vender curso.';
-      } else if (a.fat === 'Até R$ 4,8 milhões') {
-        r.rota = 'Empresa de pequeno porte';
-        r.principal = a.regime === 'Simples Nacional' ? OF.SIMPLES : OF.GC;
-        r.secundaria = a.regime === 'Simples Nacional' ? OF.GC : '';
-        r.abordagem = 'Porte pequeno: o curso é a porta de entrada. ARK e in company só se a conversa mostrar volume ou grupo com mais empresas.';
+      } else if (a.regime === 'Simples Nacional' && (a.equipe === '1 ou 2' || a.equipe === 'É terceirizado')) {
+        r.rota = 'Empresa pequena do Simples';
+        r.principal = OF.SIMPLES;
+        r.secundaria = OF.GC;
+        r.abordagem = 'Empresa do Simples com fiscal pequeno ou terceirizado: o curso é a porta de entrada. ARK e in company só se a conversa mostrar volume ou grupo com mais empresas.';
       } else if (mapeando && !temTrein) {
         r.rota = 'Mapeando impactos, sem capacitação';
         r.principal = trein;
@@ -782,7 +753,8 @@
       var pts = 0;
       pts += { 'Ainda em 2026': 3, 'Até março de 2027': 2, 'Ao longo de 2027': 1 }[a.prazo] || 0;
       pts += { 'Sócio ou diretor': 2, 'Diretor financeiro ou CFO': 2, 'Controller ou gerente financeiro': 1, 'Gerente ou analista fiscal': 1, 'Contador': 1 }[a.cargo] || 0;
-      pts += { 'Acima de R$ 300 milhões': 3, 'De R$ 50 a 300 milhões': 2, 'De R$ 4,8 a 50 milhões': 1 }[a.fat] || 0;
+      pts += { 'Mais de 10': 2, '3 a 10': 1 }[a.equipe] || 0;
+      if (a.regime === 'Lucro Real') pts += 1;
       if (a.saldo === 'Sim, valor relevante') pts += 2;
       if (mapeando) pts += 1;
       if (a.nec !== 'Entender melhor antes de decidir') pts += 1;
@@ -793,10 +765,10 @@
 
     // Texto do próximo passo que o lead vê
     var LEAD_COPY = {};
-    LEAD_COPY[OF.ARK]     = ['Medir o impacto com os números da {empresa}', 'Uma análise sem custo na plataforma ARK mostra quanto a empresa pagaria nos cenários da transição e se existem créditos acumulados que podem virar caixa.'];
-    LEAD_COPY[OF.IC]      = ['Capacitar a equipe que está conduzindo a transição', 'O mapeamento já começou. O próximo passo é a equipe dominar as regras novas para sustentar no dia a dia o que ele apontar, num treinamento fechado para a {empresa} com os professores da Jornada Tax.'];
+    LEAD_COPY[OF.ARK]     = ['Medir o impacto com os números da sua empresa', 'Uma análise sem custo na plataforma ARK mostra quanto a empresa pagaria nos cenários da transição e se existem créditos acumulados que podem virar caixa.'];
+    LEAD_COPY[OF.IC]      = ['Capacitar a equipe que está conduzindo a transição', 'O mapeamento já começou. O próximo passo é a equipe dominar as regras novas para sustentar no dia a dia o que ele apontar, num treinamento fechado para a sua empresa com os professores da Jornada Tax.'];
     LEAD_COPY[OF.GC_EQ]   = ['Capacitar quem está conduzindo a transição', 'O mapeamento já começou. O próximo passo é quem cuida do fiscal dominar as regras novas, com o Guia Completo da Reforma Tributária, aulas ao vivo e grupo de dúvidas com os professores.'];
-    LEAD_COPY[OF.MENT]    = ['Acompanhamento na implementação', 'Horas com os especialistas da Jornada Tax para revisar decisões, validar o que já foi feito e destravar os pontos que travam a implementação na {empresa}.'];
+    LEAD_COPY[OF.MENT]    = ['Acompanhamento na implementação', 'Horas com os especialistas da Jornada Tax para revisar decisões, validar o que já foi feito e destravar os pontos que travam a implementação na sua empresa.'];
     LEAD_COPY[OF.ESC]     = ['Preparar o escritório para atender os clientes em 2027', 'Formação da equipe com o Guia Completo da Reforma Tributária e as ferramentas da Jornada Tax para responder as dúvidas que os clientes já estão trazendo.'];
     LEAD_COPY[OF.PARC]    = ['Conversar sobre parceria', 'Formação técnica com a Jornada Tax e um modelo de parceria para levar análise e ferramentas da Reforma aos seus clientes.'];
     LEAD_COPY[OF.SIMPLES] = ['Entender o que muda no Simples Nacional', 'O Guia do Simples Nacional mostra o efeito da Reforma em quem está no regime e na relação com clientes e fornecedores que tomam crédito.'];
@@ -804,9 +776,8 @@
 
     function render(a, r) {
       var copy = LEAD_COPY[r.principal] || LEAD_COPY[OF.ARK];
-      var emp = a.empresa || 'sua empresa';
-      document.getElementById('r-offer').textContent = copy[0].replace('{empresa}', emp);
-      document.getElementById('r-offer-text').textContent = copy[1].replace('{empresa}', emp);
+      document.getElementById('r-offer').textContent = copy[0];
+      document.getElementById('r-offer-text').textContent = copy[1];
       var first = a.nome.split(/\s+/)[0];
       document.getElementById('r-title').textContent = 'Obrigado, ' + first + '. Diagnóstico recebido.';
       var seen = ['Preparação: ' + a.estagio.toLowerCase()];
@@ -825,13 +796,10 @@
 
       var a = {
         nome:        document.getElementById('nome').value.trim(),
-        empresa:     document.getElementById('empresa').value.trim(),
-        email:       document.getElementById('email').value.trim(),
         whatsapp:    tel.value.trim(),
         cargo:       one('cargo'),
         org:         one('org'),
         regime:      one('regime'),
-        fat:         one('fat'),
         segmento:    one('segmento'),
         equipe:      one('equipe'),
         estagio:     one('estagio'),

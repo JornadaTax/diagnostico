@@ -1,0 +1,892 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Diagnóstico da Reforma · Jornada Tax</title>
+<meta name="description" content="Em cerca de 3 minutos, conte em que ponto a sua empresa está na Reforma Tributária e receba o próximo passo indicado para a sua realidade.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Roboto+Flex:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,600&display=swap');
+
+  :root {
+    --azul-royal: #040C3D;
+    --preto:      #01051C;
+    --azul-medio: #4875B7;
+    --branco:     #FFFFFF;
+    --cinza-claro:#DDDDDD;
+    --cinza-medio:#5E5F61;
+    --erro:       #b23b3b; /* vermelho sóbrio só para validação (não é acento de marca) */
+
+    --serif: 'Lora', Georgia, 'Times New Roman', serif;
+    --sans:  'Roboto Flex', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--sans);
+    color: var(--azul-royal);
+    background:
+      radial-gradient(1100px 700px at 50% -10%, #0a1655 0%, var(--azul-royal) 42%, var(--preto) 100%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: clamp(20px, 5vw, 64px) 16px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stage { animation: rise .6s cubic-bezier(.2,.7,.2,1) both; }
+    .step.active { animation: fade .35s ease both; }
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .stage { position: relative; width: 100%; max-width: 640px; }
+
+  .watermark {
+    position: absolute; top: -46px; left: 50%; transform: translateX(-50%);
+    width: 240px; opacity: .06; pointer-events: none; z-index: 0;
+  }
+  .watermark svg { width: 100%; height: auto; display: block; }
+
+  .brand {
+    position: relative; z-index: 1;
+    display: flex; align-items: center; gap: 12px; justify-content: center;
+    margin-bottom: 22px;
+  }
+  .brand .sym { width: 34px; height: 34px; flex: 0 0 auto; }
+  .brand .sym svg { width: 100%; height: 100%; display: block; }
+  .brand .name { font-family: var(--serif); font-weight: 600; font-size: 21px; letter-spacing: .01em; color: var(--branco); }
+  .brand .name b { font-weight: 400; opacity: .82; }
+
+  .card {
+    position: relative; z-index: 1;
+    background: var(--branco);
+    border-radius: 16px;
+    padding: clamp(24px, 5vw, 44px);
+    box-shadow: 0 24px 60px rgba(1,5,28,.42), 0 2px 0 rgba(255,255,255,.06);
+    scroll-margin-top: 16px;
+  }
+
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--azul-medio); margin: 0 0 12px; }
+  h1 {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(25px, 4.6vw, 32px); line-height: 1.16;
+    text-wrap: balance; margin: 0 0 12px; color: var(--azul-royal);
+  }
+  .lead { margin: 0 0 22px; font-size: 15.5px; line-height: 1.55; color: var(--cinza-medio); max-width: 50ch; }
+
+  /* Progresso */
+  .progress { list-style: none; margin: 0 0 26px; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .progress li { display: flex; flex-direction: column; gap: 7px; }
+  .progress .bar { height: 4px; border-radius: 4px; background: var(--cinza-claro); transition: background .25s; }
+  .progress .lbl { font-size: 11.5px; font-weight: 500; color: #8a8c92; line-height: 1.25; }
+  .progress li.done .bar, .progress li.current .bar { background: var(--azul-medio); }
+  .progress li.current .lbl { color: var(--azul-royal); font-weight: 600; }
+  .progress li.done .lbl { color: var(--cinza-medio); }
+  @media (max-width: 520px) {
+    .progress .lbl { display: none; }
+    .progress li.current .lbl { display: block; grid-column: 1 / -1; }
+  }
+  .step-count { font-size: 12.5px; color: var(--cinza-medio); margin: -14px 0 22px; }
+
+  .step { display: none; flex-direction: column; gap: 24px; }
+  .step.active { display: flex; }
+  .step-title { font-family: var(--serif); font-weight: 600; font-size: 21px; margin: 0; color: var(--azul-royal); }
+  .step-sub { margin: -16px 0 0; font-size: 14px; line-height: 1.5; color: var(--cinza-medio); }
+
+  .field { display: flex; flex-direction: column; gap: 9px; border: 0; margin: 0; padding: 0; min-width: 0; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 520px) { .row2 { grid-template-columns: 1fr; gap: 24px; } }
+
+  .q { font-size: 14.5px; font-weight: 600; color: var(--azul-royal); letter-spacing: .005em; padding: 0; line-height: 1.4; }
+  .q .req { color: var(--azul-medio); margin-left: 2px; }
+  .q .opt { color: var(--cinza-medio); font-weight: 400; margin-left: 4px; }
+  .hint { font-size: 12.5px; color: var(--cinza-medio); font-weight: 400; margin-top: -3px; }
+
+  input[type="text"], input[type="tel"], input[type="email"], textarea {
+    font-family: var(--sans); font-size: 15.5px; color: var(--azul-royal);
+    background: #fbfbfd; border: 1.5px solid var(--cinza-claro); border-radius: 10px;
+    padding: 13px 15px; width: 100%;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  textarea { min-height: 92px; resize: vertical; line-height: 1.5; }
+  input::placeholder, textarea::placeholder { color: #a9abb1; }
+  input:hover, textarea:hover { border-color: #c4c6cc; }
+  input:focus, textarea:focus {
+    outline: none; border-color: var(--azul-medio); background: #fff;
+    box-shadow: 0 0 0 4px rgba(72,117,183,.16);
+  }
+
+  /* Chips (radio e checkbox) */
+  .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .chips.one { grid-template-columns: 1fr; }
+  @media (max-width: 460px) { .chips { grid-template-columns: 1fr; } }
+  .chip { position: relative; display: flex; }
+  .chip input { position: absolute; opacity: 0; inset: 0; cursor: pointer; margin: 0; }
+  .chip span {
+    flex: 1; display: flex; align-items: center; gap: 11px;
+    padding: 13px 15px; border: 1.5px solid var(--cinza-claro); border-radius: 10px;
+    font-size: 14.5px; line-height: 1.35; color: var(--azul-royal); background: #fbfbfd;
+    transition: border-color .15s, background .15s, box-shadow .15s;
+  }
+  .chip span::before {
+    content: ""; width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid #c4c6cc; flex: 0 0 auto;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .chip input[type="checkbox"] + span::before { border-radius: 4px; }
+  .chip input:hover + span { border-color: #b8bac0; }
+  .chip input:focus-visible + span { box-shadow: 0 0 0 4px rgba(72,117,183,.16); border-color: var(--azul-medio); }
+  .chip input:checked + span { border-color: var(--azul-medio); background: #eef3fa; font-weight: 500; }
+  .chip input[type="radio"]:checked + span::before {
+    border-color: var(--azul-medio);
+    background: radial-gradient(circle at center, var(--azul-medio) 0 5px, #fff 6px 8px);
+  }
+  .chip input[type="checkbox"]:checked + span::before {
+    border-color: var(--azul-medio);
+    background: var(--azul-medio) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' stroke='%23fff' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 12px no-repeat;
+  }
+
+  /* Faixas curtas: chips em linha */
+  .chips.inline { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 560px) { .chips.inline { grid-template-columns: 1fr 1fr; } }
+  .chips.inline .chip span { justify-content: center; text-align: center; padding: 13px 8px; }
+  .chips.inline .chip span::before { display: none; }
+  .chips.inline .chip input:checked + span { background: var(--azul-royal); border-color: var(--azul-royal); color: var(--branco); font-weight: 600; }
+
+  /* Privacidade e consentimentos */
+  .privacy {
+    background: #f4f7fb; border: 1px solid #e4e9f1; border-radius: 12px;
+    padding: 18px 20px; display: flex; flex-direction: column; gap: 14px;
+  }
+  .privacy details { font-size: 13px; color: var(--cinza-medio); line-height: 1.55; }
+  .privacy summary { cursor: pointer; font-weight: 600; color: var(--azul-royal); font-size: 13.5px; }
+  .privacy details p { margin: 10px 0 0; }
+  .check { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; font-size: 13.5px; line-height: 1.5; color: var(--azul-royal); }
+  .check input {
+    appearance: none; -webkit-appearance: none; flex: 0 0 auto;
+    width: 20px; height: 20px; margin: 1px 0 0; border-radius: 5px;
+    border: 2px solid #c4c6cc; background: #fff; cursor: pointer; position: relative;
+    transition: border-color .15s, background .15s;
+  }
+  .check input:checked { background: var(--azul-medio); border-color: var(--azul-medio); }
+  .check input:checked::after {
+    content: ""; position: absolute; left: 5px; top: 1px; width: 6px; height: 11px;
+    border: solid #fff; border-width: 0 2.4px 2.4px 0; transform: rotate(45deg);
+  }
+  .check input:focus-visible { box-shadow: 0 0 0 4px rgba(72,117,183,.2); outline: none; }
+
+  .err-msg { font-size: 12.5px; color: var(--erro); font-weight: 500; display: none; }
+  .field.invalid .err-msg { display: block; }
+  .field.invalid input[type="text"], .field.invalid input[type="tel"], .field.invalid input[type="email"] {
+    border-color: var(--erro); box-shadow: 0 0 0 4px rgba(178,59,59,.12);
+  }
+  .field.invalid .chip span { border-color: #d9a3a3; }
+  .field.invalid .check input { border-color: var(--erro); }
+
+  .safe { display: flex; gap: 10px; align-items: center; font-size: 12.5px; color: var(--cinza-medio); margin: 0; }
+  .safe svg { flex: 0 0 auto; }
+
+  /* Navegação */
+  .nav { display: flex; gap: 12px; margin-top: 6px; }
+  .nav button {
+    font-family: var(--sans); font-size: 16px; font-weight: 600; letter-spacing: .01em;
+    border-radius: 10px; padding: 16px 18px; cursor: pointer;
+    transition: background .15s, transform .06s, border-color .15s;
+  }
+  .nav .next { flex: 1; color: var(--branco); background: var(--azul-medio); border: none; }
+  .nav .next:hover { background: #3f68a5; }
+  .nav .back { color: var(--azul-royal); background: #fff; border: 1.5px solid var(--cinza-claro); }
+  .nav .back:hover { border-color: #b8bac0; }
+  .nav button:active { transform: translateY(1px); }
+  .nav button:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(72,117,183,.35); }
+  .nav button[disabled] { opacity: .7; cursor: default; }
+
+  .foot { margin-top: 18px; text-align: center; font-size: 12px; line-height: 1.6; color: rgba(255,255,255,.6); position: relative; z-index: 1; }
+
+  /* Resultado */
+  .result { display: none; }
+  .card.done .form-body { display: none; }
+  .card.done .result { display: block; }
+  .result .mark { width: 56px; height: 56px; margin: 0 0 18px; border-radius: 50%; background: #eef3fa; display: flex; align-items: center; justify-content: center; }
+  .result .mark svg { width: 28px; height: 28px; }
+  .result h2 { font-family: var(--serif); font-weight: 600; font-size: 25px; line-height: 1.2; margin: 0 0 10px; color: var(--azul-royal); text-wrap: balance; }
+  .result > p { margin: 0 0 22px; color: var(--cinza-medio); font-size: 15px; line-height: 1.55; max-width: 50ch; }
+  .next-box {
+    background: var(--azul-royal); color: var(--branco); border-radius: 14px;
+    padding: 22px 24px; margin-bottom: 18px;
+  }
+  .next-box .k { font-size: 11.5px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: #9fb7dc; margin: 0 0 8px; }
+  .next-box h3 { font-family: var(--serif); font-weight: 600; font-size: 20px; line-height: 1.25; margin: 0 0 8px; }
+  .next-box p { margin: 0; font-size: 14.5px; line-height: 1.55; color: rgba(255,255,255,.86); }
+  .seen { border: 1px solid #e4e9f1; background: #f4f7fb; border-radius: 12px; padding: 16px 18px; }
+  .seen .k { font-size: 12.5px; font-weight: 600; color: var(--azul-royal); margin: 0 0 8px; }
+  .seen ul { margin: 0; padding-left: 18px; font-size: 14px; line-height: 1.6; color: var(--cinza-medio); }
+  .result .after { margin: 18px 0 0; font-size: 14px; line-height: 1.55; color: var(--cinza-medio); }
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="watermark" aria-hidden="true">
+    <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M540,160.53c209.57,0,379.47,169.89,379.47,379.47s-169.89,379.47-379.47,379.47-379.47-169.89-379.47-379.47,169.89-379.47,379.47-379.47M540,148.51c-215.87,0-391.49,175.62-391.49,391.49s175.62,391.49,391.49,391.49,391.49-175.62,391.49-391.49-175.62-391.49-391.49-391.49h0Z"/><path fill="#fff" d="M176.73,529.95c5.36-195.75,166.27-353.35,363.27-353.35s363.4,163.04,363.4,363.4c0,50.9-10.5,99.37-29.46,143.39-20.4,47.3-50.55,89.42-87.9,123.87-64.76,59.67-151.23,96.14-246.04,96.14s-181.25-36.47-246.01-96.14c-37.33-34.39-67.43-76.47-87.8-123.68-3.17-7.28-6.08-14.66-8.74-22.18-4.51-12.64-8.32-25.65-11.41-38.87v-.05c-5.07-21.73-8.16-44.18-9.12-67.19-.21-5.07-.32-10.16-.32-15.28,0-3.36.05-6.72.13-10.05ZM883.46,540c0-189.38-154.08-343.43-343.46-343.43s-339.46,150.11-343.35,336.13c2.29.35,4.56.67,6.74.93,8.05,1.01,14.98,1.39,17.33-.32l26.8-45.81,3.31-5.68,10.16-17.36,7.79-13.33,2.99-5.09,8.08-13.84,58.28-21.81,15.86-27.04,13.52-23.04,18.56-10.85,9.78-5.73,24.61-27.12,27.86-30.69,11.97-13.2c6.27,6.93,12.29,14.05,18.29,21.25,8.21,9.84,16.32,19.81,24.66,29.54,1.25,1.47,2.53,2.91,3.84,4.35,10.13,11.28,21.6,22.4,30.66,34.1,10.32,13.28,18.61,29.38,28.69,42.98,4.69,2.91,16.98-7.31,22.18-1.39,10.64,15.7,21.89,30.98,32.66,46.58,1.41,2.08,2.85,4.13,4.24,6.24.56.8,1.09,1.6,1.65,2.43,4.19,6.24,7.23,11.12,10.5,16,2.16,3.23,4.37,6.43,7.09,10.02,1.12,1.52,2.35,3.09,3.68,4.77,9.44,11.86,18.77,23.81,28,35.83,4.69,3.65,9.84,2.96,14.82.67,2.77-1.31,5.49-3.09,8.02-4.91,5.71-4.05,10.48-8.19,12.98-6.93l18.53,19.38,100.12,104.73,27.97,29.25c15.86-39.49,24.58-82.55,24.58-127.63ZM540,748.51c-114.86,0-208.51-93.65-208.51-208.51s93.65-208.51,208.51-208.51,208.51,93.65,208.51,208.51-93.65,208.51-208.51,208.51Z"/></svg>
+  </div>
+
+  <div class="brand">
+    <span class="sym" aria-hidden="true">
+      <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M540,148.51c-215.87,0-391.49,175.62-391.49,391.49s175.62,391.49,391.49,391.49,391.49-175.62,391.49-391.49-175.62-391.49-391.49-391.49ZM540,907.49c-202.63,0-367.49-164.86-367.49-367.49s164.86-367.49,367.49-367.49,367.49,164.86,367.49,367.49-164.86,367.49-367.49,367.49Z"/><path fill="#fff" d="M540,236.6c-155.75,0-283.9,120.9-292.66,273.35-.06,1.66-.11,3.32-.14,4.99-.02,1.68-.03,3.36-.03,5.05,0,167.31,135.53,302.85,302.85,302.85s302.85-135.53,302.85-302.85c0-1.69-.01-3.37-.03-5.05-8.79-152.45-136.94-283.35-292.66-283.35v5.02ZM540,798.83c-138.55,0-251.35-112.79-251.35-251.35,0-.9,0-1.79.02-2.68l82.16-140.44c1.24-2.12,1.94-3.31,2.06-3.51l58.55-100.09,58.56,100.09,180.34,308.3c-45.99,55.62-115.5,91.05-192.94,91.05-45.99,0-88.87-12.35-125.94-33.91l187.55-320.55,187.53,320.52c-45.42,17.87-84.98,32.02-186.53,32.47Z"/></svg>
+    </span>
+    <span class="name">Jornada <b>Tax</b></span>
+  </div>
+
+  <div class="card" id="card">
+    <div class="form-body">
+      <p class="eyebrow" id="eyebrow">Reforma Tributária · Diagnóstico</p>
+      <h1>Em que ponto a sua empresa está na Reforma?</h1>
+      <p class="lead">Queremos entender em que parte da jornada da Reforma você está hoje: o que já foi feito, o que preocupa e o que ainda falta. Leva cerca de 3 minutos.</p>
+
+      <ol class="progress" id="progress" aria-hidden="true">
+        <li><span class="bar"></span><span class="lbl">Sua empresa</span></li>
+        <li><span class="bar"></span><span class="lbl">Onde vocês estão</span></li>
+        <li><span class="bar"></span><span class="lbl">O que está em jogo</span></li>
+        <li><span class="bar"></span><span class="lbl">Próximo passo</span></li>
+        <li><span class="bar"></span><span class="lbl">Seus dados</span></li>
+      </ol>
+      <p class="step-count" id="step-count" aria-live="polite">Etapa 1 de 5</p>
+
+      <form id="form" novalidate>
+
+        <!-- ETAPA 1 · Situação -->
+        <section class="step active" data-step="1">
+          <h2 class="step-title">Sua empresa</h2>
+
+          <fieldset class="field" data-req="org">
+            <legend class="q">Você está respondendo por <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="org" value="Empresa (time interno)"><span>Uma empresa (time interno)</span></label>
+              <label class="chip"><input type="radio" name="org" value="Escritório contábil"><span>Um escritório contábil</span></label>
+              <label class="chip"><input type="radio" name="org" value="Consultoria ou advocacia tributária"><span>Consultoria ou advocacia tributária</span></label>
+              <label class="chip"><input type="radio" name="org" value="Outro"><span>Outro</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="regime">
+            <legend class="q"><span data-alt="Regime da maioria dos seus clientes">Regime tributário da empresa</span> <span class="req">*</span></legend>
+            <div class="chips inline">
+              <label class="chip"><input type="radio" name="regime" value="Simples Nacional"><span>Simples Nacional</span></label>
+              <label class="chip"><input type="radio" name="regime" value="Lucro Presumido"><span>Lucro Presumido</span></label>
+              <label class="chip"><input type="radio" name="regime" value="Lucro Real"><span>Lucro Real</span></label>
+              <label class="chip"><input type="radio" name="regime" value="Não sei"><span>Não sei</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="fat">
+            <legend class="q"><span data-alt="Faturamento anual do escritório">Faturamento anual da empresa</span> <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="fat" value="Até R$ 4,8 milhões"><span>Até R$ 4,8 milhões</span></label>
+              <label class="chip"><input type="radio" name="fat" value="De R$ 4,8 a 50 milhões"><span>De R$ 4,8 a 50 milhões</span></label>
+              <label class="chip"><input type="radio" name="fat" value="De R$ 50 a 300 milhões"><span>De R$ 50 a 300 milhões</span></label>
+              <label class="chip"><input type="radio" name="fat" value="Acima de R$ 300 milhões"><span>Acima de R$ 300 milhões</span></label>
+              <label class="chip"><input type="radio" name="fat" value="Prefiro não informar"><span>Prefiro não informar</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="segmento">
+            <legend class="q"><span data-alt="Segmento da maioria dos seus clientes">Segmento</span> <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="segmento" value="Indústria"><span>Indústria</span></label>
+              <label class="chip"><input type="radio" name="segmento" value="Comércio, varejo ou distribuição"><span>Comércio, varejo ou distribuição</span></label>
+              <label class="chip"><input type="radio" name="segmento" value="Serviços"><span>Serviços</span></label>
+              <label class="chip"><input type="radio" name="segmento" value="Agronegócio"><span>Agronegócio</span></label>
+              <label class="chip"><input type="radio" name="segmento" value="Outro"><span>Outro</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="equipe">
+            <legend class="q">Quantas pessoas cuidam do fiscal e tributário? <span class="req">*</span></legend>
+            <div class="chips inline">
+              <label class="chip"><input type="radio" name="equipe" value="1 ou 2"><span>1 ou 2</span></label>
+              <label class="chip"><input type="radio" name="equipe" value="3 a 10"><span>3 a 10</span></label>
+              <label class="chip"><input type="radio" name="equipe" value="Mais de 10"><span>Mais de 10</span></label>
+              <label class="chip"><input type="radio" name="equipe" value="É terceirizado"><span>Terceirizado</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+        </section>
+
+        <!-- ETAPA 2 · Situação e Problema -->
+        <section class="step" data-step="2">
+          <h2 class="step-title">Onde vocês estão</h2>
+
+          <fieldset class="field" data-req="estagio">
+            <legend class="q">Em que ponto está a preparação para a Reforma? <span class="req">*</span></legend>
+            <div class="chips one">
+              <label class="chip"><input type="radio" name="estagio" value="Ainda não começamos"><span>Ainda não começamos</span></label>
+              <label class="chip"><input type="radio" name="estagio" value="Estudando o tema"><span>Estamos estudando o tema</span></label>
+              <label class="chip"><input type="radio" name="estagio" value="Mapeando os impactos"><span>Já estamos mapeando os impactos</span></label>
+              <label class="chip"><input type="radio" name="estagio" value="Impacto medido, implementando"><span>Impacto medido, já implementando as mudanças</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="apoio" data-multi>
+            <legend class="q">Que apoio vocês já têm na Reforma? <span class="req">*</span></legend>
+            <span class="hint">Marque todos que se aplicam.</span>
+            <div class="chips one">
+              <label class="chip"><input type="checkbox" name="apoio" value="Equipe estudando por conta própria"><span>Equipe estudando por conta própria</span></label>
+              <label class="chip"><input type="checkbox" name="apoio" value="Curso ou treinamento"><span>Curso ou treinamento sobre a Reforma</span></label>
+              <label class="chip"><input type="checkbox" name="apoio" value="Consultoria contratada"><span>Consultoria ou escritório contratado para a Reforma</span></label>
+              <label class="chip"><input type="checkbox" name="apoio" value="Ferramenta de simulação"><span>Ferramenta ou sistema de simulação do impacto</span></label>
+              <label class="chip"><input type="checkbox" name="apoio" value="Nenhum" data-exclusive><span>Nenhum por enquanto</span></label>
+            </div>
+            <span class="err-msg">Marque pelo menos uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="dores" data-multi>
+            <legend class="q">O que mais preocupa hoje? <span class="req">*</span></legend>
+            <span class="hint">Marque até três.</span>
+            <div class="chips one" data-max="3">
+              <label class="chip"><input type="checkbox" name="dores" value="Impacto no caixa e na margem"><span>Quanto a Reforma muda o caixa e a margem</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="Créditos e saldos acumulados"><span>Créditos e saldos acumulados (ICMS, PIS e Cofins)</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="Equipe sem domínio das regras novas"><span>Equipe ainda sem domínio das regras novas</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="Preço e contratos"><span>Preço e contratos a partir de 2027</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="ERP, sistemas e notas fiscais"><span>ERP, sistemas e notas fiscais</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="Fornecedores do Simples na cadeia"><span>Fornecedores do Simples na cadeia</span></label>
+              <label class="chip"><input type="checkbox" name="dores" value="Split payment"><span>Split payment e o recolhimento no pagamento</span></label>
+            </div>
+            <span class="err-msg">Marque pelo menos uma opção.</span>
+          </fieldset>
+        </section>
+
+        <!-- ETAPA 3 · Implicação -->
+        <section class="step" data-step="3">
+          <h2 class="step-title">O que está em jogo</h2>
+
+          <fieldset class="field" data-req="saldo">
+            <legend class="q"><span data-alt="Seus clientes têm saldo credor de ICMS ou créditos de PIS e Cofins acumulados?">A empresa tem saldo credor de ICMS ou créditos de PIS e Cofins acumulados?</span> <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="saldo" value="Sim, valor relevante"><span>Sim, valor relevante</span></label>
+              <label class="chip"><input type="radio" name="saldo" value="Sim, valor pequeno"><span>Sim, valor pequeno</span></label>
+              <label class="chip"><input type="radio" name="saldo" value="Não"><span>Não</span></label>
+              <label class="chip"><input type="radio" name="saldo" value="Não sei dizer"><span>Não sei dizer</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="risco">
+            <legend class="q">Se 2027 chegar sem o impacto medido, o que pesa mais? <span class="req">*</span></legend>
+            <div class="chips one">
+              <label class="chip"><input type="radio" name="risco" value="Errar o preço e perder margem"><span>Errar o preço e perder margem</span></label>
+              <label class="chip"><input type="radio" name="risco" value="Caixa parado em crédito"><span>Caixa parado em crédito que demora a voltar</span></label>
+              <label class="chip"><input type="radio" name="risco" value="Erro em nota fiscal e retrabalho"><span>Erro em nota fiscal e retrabalho no fiscal</span></label>
+              <label class="chip"><input type="radio" name="risco" value="Diretoria decidindo sem números"><span>Diretoria decidindo sem números</span></label>
+              <label class="chip"><input type="radio" name="risco" value="Ainda não sei avaliar"><span>Ainda não sei avaliar</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="diretoria">
+            <legend class="q">Os sócios ou a diretoria já discutiram o impacto da Reforma no resultado? <span class="req">*</span></legend>
+            <div class="chips one">
+              <label class="chip"><input type="radio" name="diretoria" value="Sim, com números"><span>Sim, com números na mesa</span></label>
+              <label class="chip"><input type="radio" name="diretoria" value="Sim, sem números"><span>Sim, mas ainda sem números</span></label>
+              <label class="chip"><input type="radio" name="diretoria" value="Ainda não"><span>Ainda não</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+        </section>
+
+        <!-- ETAPA 4 · Necessidade -->
+        <section class="step" data-step="4">
+          <h2 class="step-title">Próximo passo</h2>
+
+          <fieldset class="field" data-req="nec">
+            <legend class="q">O que mais ajudaria agora? <span class="req">*</span></legend>
+            <div class="chips one">
+              <label class="chip"><input type="radio" name="nec" value="Medir o impacto com os números da empresa"><span>Medir o impacto com os números da empresa</span></label>
+              <label class="chip"><input type="radio" name="nec" value="Capacitar a equipe"><span>Capacitar a equipe que vai conduzir a transição</span></label>
+              <label class="chip"><input type="radio" name="nec" value="Apoio na implementação"><span>Apoio de especialistas na implementação</span></label>
+              <label class="chip"><input type="radio" name="nec" value="Transformar créditos em caixa"><span>Transformar créditos acumulados em caixa</span></label>
+              <label class="chip"><input type="radio" name="nec" value="Entender melhor antes de decidir"><span>Entender melhor antes de decidir</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <fieldset class="field" data-req="prazo">
+            <legend class="q">Quando vocês querem resolver isso? <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="prazo" value="Ainda em 2026"><span>Ainda em 2026</span></label>
+              <label class="chip"><input type="radio" name="prazo" value="Até março de 2027"><span>Até março de 2027</span></label>
+              <label class="chip"><input type="radio" name="prazo" value="Ao longo de 2027"><span>Ao longo de 2027</span></label>
+              <label class="chip"><input type="radio" name="prazo" value="Sem prazo definido"><span>Sem prazo definido</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <div class="field">
+            <label class="q" for="comentarios">Algo mais que a gente deva saber? <span class="opt">(opcional)</span></label>
+            <textarea id="comentarios" name="comentarios" placeholder="Uma dúvida da live, um ponto específico da empresa, o que for útil"></textarea>
+          </div>
+        </section>
+
+        <!-- ETAPA 5 · Contato -->
+        <section class="step" data-step="5">
+          <h2 class="step-title">Seus dados</h2>
+          <p class="step-sub">Para o time da Jornada Tax falar com você sobre o próximo passo.</p>
+
+          <div class="field" id="f-nome">
+            <label class="q" for="nome">Nome completo <span class="req">*</span></label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome e sobrenome" autocomplete="name">
+            <span class="err-msg">Informe seu nome.</span>
+          </div>
+
+          <div class="field" id="f-empresa">
+            <label class="q" for="empresa">Nome da empresa <span class="req">*</span></label>
+            <input type="text" id="empresa" name="empresa" placeholder="Razão social ou nome fantasia" autocomplete="organization">
+            <span class="err-msg">Informe o nome da empresa.</span>
+          </div>
+
+          <div class="row2">
+            <div class="field" id="f-email">
+              <label class="q" for="email">E-mail corporativo <span class="req">*</span></label>
+              <input type="email" id="email" name="email" placeholder="voce@empresa.com.br" autocomplete="email" inputmode="email">
+              <span class="err-msg">Informe um e-mail válido.</span>
+            </div>
+            <div class="field" id="f-tel">
+              <label class="q" for="whatsapp">WhatsApp com DDD <span class="req">*</span></label>
+              <input type="tel" id="whatsapp" name="whatsapp" placeholder="(61) 90000-0000" autocomplete="tel" inputmode="tel">
+              <span class="err-msg">Informe um número válido com DDD.</span>
+            </div>
+          </div>
+
+          <fieldset class="field" data-req="cargo">
+            <legend class="q">Cargo ou posição <span class="req">*</span></legend>
+            <div class="chips">
+              <label class="chip"><input type="radio" name="cargo" value="Sócio ou diretor"><span>Sócio ou diretor</span></label>
+              <label class="chip"><input type="radio" name="cargo" value="Diretor financeiro ou CFO"><span>Diretor financeiro ou CFO</span></label>
+              <label class="chip"><input type="radio" name="cargo" value="Controller ou gerente financeiro"><span>Controller ou gerente financeiro</span></label>
+              <label class="chip"><input type="radio" name="cargo" value="Gerente ou analista fiscal"><span>Gerente ou analista fiscal</span></label>
+              <label class="chip"><input type="radio" name="cargo" value="Contador"><span>Contador</span></label>
+              <label class="chip"><input type="radio" name="cargo" value="Outro"><span>Outro</span></label>
+            </div>
+            <span class="err-msg">Selecione uma opção.</span>
+          </fieldset>
+
+          <div class="privacy">
+            <details>
+              <summary>Aviso de privacidade</summary>
+              <p>Os dados informados serão tratados pela JORNADA TAX LTDA (CNPJ 59.278.367/0001-14), com sede em Brasília/DF, para entender o momento da sua empresa diante da Reforma Tributária, entrar em contato e apresentar a solução indicada, com base no seu consentimento e em procedimentos preliminares a uma possível contratação feitos a seu pedido (LGPD, art. 7º, incisos I e V).</p>
+              <p>Se o próximo passo indicado envolver a análise na plataforma ARK, os dados de contato poderão ser compartilhados com a Vocare Tech, responsável pela plataforma. Os dados não são vendidos nem repassados a outros terceiros.</p>
+              <p>Este formulário não solicita documentos nem acesso a informações fiscais da empresa. Se uma análise aprofundada exigir esse acesso, ele dependerá de autorização expressa, separada e revogável, pedida apenas em etapa posterior.</p>
+              <p>Você pode pedir acesso, correção ou exclusão dos seus dados, ou revogar este consentimento, a qualquer momento, pelo e-mail info@jornadatax.com.</p>
+            </details>
+
+            <div class="field" id="f-consent">
+              <label class="check">
+                <input type="checkbox" id="consent" name="consent">
+                <span>Li o aviso de privacidade e autorizo a Jornada Tax a entrar em contato por WhatsApp, e-mail e telefone sobre este diagnóstico. <span style="color:var(--azul-medio)">*</span></span>
+              </label>
+              <span class="err-msg">Precisamos da sua autorização para entrar em contato.</span>
+            </div>
+
+            <label class="check">
+              <input type="checkbox" id="news" name="news">
+              <span>Quero receber conteúdos e novidades da Jornada Tax sobre a Reforma Tributária.</span>
+            </label>
+          </div>
+
+          <p class="safe">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4875B7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            Este formulário não pede senha, certificado digital nem acesso a sistemas fiscais.
+          </p>
+        </section>
+
+        <div class="nav">
+          <button type="button" class="back" id="back" hidden>Voltar</button>
+          <button type="submit" class="next" id="next">Continuar</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="result" id="result" role="status" aria-live="polite" tabindex="-1">
+      <div class="mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#4875B7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </div>
+      <h2 id="r-title">Diagnóstico recebido</h2>
+      <p id="r-intro">Pelo que você respondeu, este é o próximo passo que mais faz sentido agora.</p>
+      <div class="next-box">
+        <p class="k">Próximo passo indicado</p>
+        <h3 id="r-offer"></h3>
+        <p id="r-offer-text"></p>
+      </div>
+      <div class="seen">
+        <p class="k">O que você apontou</p>
+        <ul id="r-seen"></ul>
+      </div>
+      <p class="after">Um especialista da Jornada Tax vai falar com você pelo WhatsApp para combinar o próximo passo.</p>
+    </div>
+  </div>
+
+  <p class="foot">Jornada Tax, a Reforma explicada por quem participa dela.</p>
+</div>
+
+<script>
+  (function () {
+    // ── Ligação com o Google Forms (banco das respostas) ────────────────
+    // Respostas caem no Google Form "Diagnóstico da Reforma (qualificação de leads)"
+    // e na planilha vinculada. Campo novo: criar no Forms (resposta curta)
+    // e acrescentar o entry aqui.
+    var GOOGLE_FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeo-_FjJ2miinNr4nendZ-wx6SwrZIr-V02l6S7gvXC5724hw/formResponse';
+    var ENTRY = {
+      nome:        'entry.1788701340',
+      empresa:     'entry.1454380723',
+      email:       'entry.1609258977',
+      whatsapp:    'entry.1116054155',
+      cargo:       'entry.1797540661',
+      temperatura: 'entry.1478410252',
+      principal:   'entry.601306062',
+      secundaria:  'entry.742747231',
+      abordagem:   'entry.632655273',
+      sinais:      'entry.1946149853',
+      rota:        'entry.1017226372',
+      org:         'entry.1256766146',
+      regime:      'entry.636431812',
+      fat:         'entry.1046595155',
+      segmento:    'entry.1512032808',
+      equipe:      'entry.612490427',
+      estagio:     'entry.775478789',
+      apoio:       'entry.398276605',
+      dores:       'entry.236389982',
+      saldo:       'entry.301889968',
+      risco:       'entry.1454663396',
+      diretoria:   'entry.1905308100',
+      nec:         'entry.89675022',
+      prazo:       'entry.1245645416',
+      comentarios: 'entry.491412753',
+      consent:     'entry.357205269',
+      news:        'entry.1898830158',
+      origem:      'entry.2036789516'
+    };
+    // ─────────────────────────────────────────────────────────────────────
+
+    var form   = document.getElementById('form');
+    var card   = document.getElementById('card');
+    var steps  = Array.prototype.slice.call(form.querySelectorAll('.step'));
+    var bars   = Array.prototype.slice.call(document.querySelectorAll('#progress li'));
+    var counter= document.getElementById('step-count');
+    var btnNext= document.getElementById('next');
+    var btnBack= document.getElementById('back');
+    var tel    = document.getElementById('whatsapp');
+    var cur    = 0;
+
+    var params = new URLSearchParams(location.search);
+
+    // Origem do lead: parâmetros UTM do link (ex.: ?utm_source=v360&utm_medium=live)
+    function origem() {
+      var keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+      var parts = keys.filter(function (k) { return params.get(k); })
+                      .map(function (k) { return k.replace('utm_', '') + '=' + params.get(k); });
+      return parts.length ? parts.join(' | ') : 'direto';
+    }
+
+    // Chamada do topo conforme a origem
+    (function () {
+      var src = ((params.get('utm_source') || '') + ' ' + (params.get('utm_campaign') || '')).toLowerCase();
+      if (src.indexOf('v360') !== -1) document.getElementById('eyebrow').textContent = 'Live Jornada Tax e V360 · Diagnóstico';
+    })();
+
+    // ── Helpers ─────────────────────────────────────────────────────────
+    function one(name)  { var el = form.querySelector('input[name="' + name + '"]:checked'); return el ? el.value : ''; }
+    function many(name) { return Array.prototype.map.call(form.querySelectorAll('input[name="' + name + '"]:checked'), function (el) { return el.value; }); }
+    function has(arr, v) { return arr.indexOf(v) !== -1; }
+    function digits(s) { return (s || '').replace(/\D/g, ''); }
+    function validEmail(s) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); }
+
+    // Texto alternativo para escritório contábil (fala dos clientes, não da empresa)
+    var alts = Array.prototype.slice.call(document.querySelectorAll('[data-alt]'));
+    alts.forEach(function (el) { el.setAttribute('data-orig', el.textContent); });
+    form.addEventListener('change', function (e) {
+      if (e.target.name === 'org') {
+        var contabil = e.target.value === 'Escritório contábil';
+        alts.forEach(function (el) { el.textContent = contabil ? el.getAttribute('data-alt') : el.getAttribute('data-orig'); });
+      }
+    });
+
+    // "Nenhum por enquanto" é exclusivo; "preocupações" aceita até três
+    form.addEventListener('change', function (e) {
+      var t = e.target;
+      if (t.type !== 'checkbox' || !t.name) return;
+      var group = form.querySelectorAll('input[name="' + t.name + '"]');
+      if (t.checked && t.hasAttribute('data-exclusive')) {
+        group.forEach(function (el) { if (el !== t) el.checked = false; });
+      } else if (t.checked) {
+        group.forEach(function (el) { if (el.hasAttribute('data-exclusive')) el.checked = false; });
+      }
+      var box = t.closest('[data-max]');
+      if (box) {
+        var max = +box.getAttribute('data-max');
+        var n = box.querySelectorAll('input:checked').length;
+        box.querySelectorAll('input').forEach(function (el) { el.disabled = !el.checked && n >= max; });
+      }
+    });
+
+    // Limpa o erro ao responder
+    form.addEventListener('input',  function (e) { var f = e.target.closest('.field'); if (f) f.classList.remove('invalid'); });
+    form.addEventListener('change', function (e) { var f = e.target.closest('.field'); if (f) f.classList.remove('invalid'); });
+
+    // Máscara de telefone BR: (61) 90000-0000
+    tel.addEventListener('input', function () {
+      var d = tel.value.replace(/\D/g, '').slice(0, 11);
+      var out = '';
+      if (d.length > 0) out = '(' + d.slice(0, 2);
+      if (d.length >= 2) out += ') ';
+      if (d.length > 2) {
+        var rest = d.slice(2);
+        if (d.length <= 10) { out += rest.slice(0, 4); if (rest.length > 4) out += '-' + rest.slice(4, 8); }
+        else { out += rest.slice(0, 5); if (rest.length > 5) out += '-' + rest.slice(5, 9); }
+      }
+      tel.value = out;
+    });
+
+    // ── Navegação entre etapas ──────────────────────────────────────────
+    function show(i) {
+      steps.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+      bars.forEach(function (b, k) { b.classList.toggle('done', k < i); b.classList.toggle('current', k === i); });
+      counter.textContent = 'Etapa ' + (i + 1) + ' de ' + steps.length;
+      btnBack.hidden = i === 0;
+      btnNext.textContent = i === steps.length - 1 ? 'Ver meu próximo passo' : 'Continuar';
+      cur = i;
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function validate(i) {
+      var step = steps[i], bad = [];
+      step.querySelectorAll('[data-req]').forEach(function (f) {
+        var name = f.getAttribute('data-req');
+        var ok = f.hasAttribute('data-multi') ? many(name).length > 0 : !!one(name);
+        f.classList.toggle('invalid', !ok);
+        if (!ok) bad.push(f);
+      });
+      if (i === steps.length - 1) {
+        var checks = [
+          ['f-nome',    !!document.getElementById('nome').value.trim()],
+          ['f-empresa', !!document.getElementById('empresa').value.trim()],
+          ['f-email',   validEmail(document.getElementById('email').value.trim())],
+          ['f-tel',     digits(tel.value).length >= 10],
+          ['f-consent', document.getElementById('consent').checked]
+        ];
+        checks.forEach(function (c) {
+          var f = document.getElementById(c[0]);
+          f.classList.toggle('invalid', !c[1]);
+          if (!c[1]) bad.push(f);
+        });
+      }
+      if (bad.length) {
+        bad.sort(function (a, b) { return a.compareDocumentPosition(b) & 2 ? 1 : -1; });
+        var first = bad[0];
+        var focusable = first.querySelector('input, textarea');
+        if (focusable) focusable.focus({ preventScroll: true });
+        first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return false;
+      }
+      return true;
+    }
+
+    btnBack.addEventListener('click', function () { if (cur > 0) show(cur - 1); });
+
+    // ── Regra de qualificação (SPIN → oferta) ───────────────────────────
+    // Ordem de decisão:
+    // 1. Escritório contábil e consultoria têm rota própria (formação e parceria).
+    // 2. Empresa de até R$ 4,8 mi: curso é a porta de entrada.
+    // 3. Empresa que já mapeia impactos e não tem capacitação: treinamento (ARK não abre a conversa).
+    // 4. Empresa com capacitação ou consultoria: ARK com análise gratuita
+    //    (se já tem ferramenta de simulação, mentoria de implementação).
+    // 5. Empresa que ainda não começou: ARK para medir o impacto, capacitação em seguida.
+    var OF = {
+      ARK:      'ARK: análise gratuita do impacto',
+      CRED:     'ARK: análise de créditos acumulados',
+      IC:       'Treinamento in company da equipe',
+      GC_EQ:    'Guia Completo para a equipe',
+      MENT:     'Mentoria de implementação',
+      PAL:      'Palestra para sócios e diretoria',
+      GC:       'Guia Completo da Reforma Tributária',
+      SIMPLES:  'Guia do Simples Nacional',
+      ESC:      'Guia Completo para a equipe do escritório',
+      COPILOTO: 'Copiloto do Simples Nacional',
+      PARC:     'Conversa de parceria (canal)'
+    };
+
+    function qualificar(a) {
+      var temTrein = has(a.apoio, 'Curso ou treinamento');
+      var temCons  = has(a.apoio, 'Consultoria contratada');
+      var temFerr  = has(a.apoio, 'Ferramenta de simulação');
+      var mapeando = a.estagio === 'Mapeando os impactos' || a.estagio === 'Impacto medido, implementando';
+      var grande   = a.fat === 'De R$ 50 a 300 milhões' || a.fat === 'Acima de R$ 300 milhões';
+      var equipeGrande = a.equipe === '3 a 10' || a.equipe === 'Mais de 10';
+      var trein    = (equipeGrande || grande) ? OF.IC : OF.GC_EQ;
+      var semNumeroNaDiretoria = a.diretoria !== 'Sim, com números';
+      var r = { rota: '', principal: '', secundaria: '', abordagem: '', sinais: [] };
+
+      if (a.org === 'Escritório contábil') {
+        r.rota = 'Escritório contábil';
+        r.principal = OF.ESC;
+        r.secundaria = a.regime === 'Simples Nacional' ? OF.COPILOTO : OF.PARC;
+        r.abordagem = 'Escritório que vai receber as dúvidas dos clientes em 2027. Abrir pela demanda que já está chegando e pela equipe que precisa responder. Oferecer a formação da equipe; depois o Copiloto (carteira no Simples) ou a parceria de indicação.';
+      } else if (a.org === 'Consultoria ou advocacia tributária') {
+        r.rota = 'Consultoria ou advocacia';
+        r.principal = OF.PARC;
+        r.secundaria = OF.GC_EQ;
+        r.abordagem = 'Pode ser canal. Entender a carteira e o que já entregam na Reforma. Abrir pela parceria (ARK e indicação) antes de vender curso.';
+      } else if (a.fat === 'Até R$ 4,8 milhões') {
+        r.rota = 'Empresa de pequeno porte';
+        r.principal = a.regime === 'Simples Nacional' ? OF.SIMPLES : OF.GC;
+        r.secundaria = a.regime === 'Simples Nacional' ? OF.GC : '';
+        r.abordagem = 'Porte pequeno: o curso é a porta de entrada. ARK e in company só se a conversa mostrar volume ou grupo com mais empresas.';
+      } else if (mapeando && !temTrein) {
+        r.rota = 'Mapeando impactos, sem capacitação';
+        r.principal = trein;
+        r.secundaria = (a.estagio === 'Impacto medido, implementando' || a.nec === 'Apoio na implementação')
+          ? OF.MENT : (grande && semNumeroNaDiretoria ? OF.PAL : OF.MENT);
+        r.abordagem = 'Já estão mapeando os impactos' + (temCons ? ' (com consultoria)' : '') + ', mas a equipe não foi capacitada. Pergunta de implicação: quem sustenta no dia a dia o que o mapeamento apontou? Oferecer a capacitação. Não abrir com ARK.';
+      } else if (temTrein || temCons) {
+        if (temFerr) {
+          r.rota = 'Capacitação e ferramenta já contratadas';
+          r.principal = OF.MENT;
+          r.secundaria = a.saldo === 'Sim, valor relevante' ? OF.CRED : '';
+          r.abordagem = 'Já têm ' + (temTrein ? 'curso' : 'consultoria') + ' e ferramenta de simulação. Posicionar a mentoria como segunda opinião técnica nas decisões da implementação.';
+        } else {
+          r.rota = 'Já tem capacitação ou consultoria';
+          r.principal = OF.ARK;
+          r.secundaria = a.nec === 'Apoio na implementação' ? OF.MENT : (a.nec === 'Capacitar a equipe' && !temTrein ? trein : '');
+          r.abordagem = 'Já têm ' + (temTrein && temCons ? 'curso e consultoria' : temTrein ? 'curso' : 'consultoria') + ', mas não mediram o impacto com os números da empresa. Abrir pela tese da live: o caixa de 2027 depende do histórico fiscal. Oferecer a análise gratuita no ARK.' + (temTrein ? ' Não abrir com treinamento.' : '');
+        }
+      } else {
+        r.rota = 'Começando agora';
+        r.principal = OF.ARK;
+        r.secundaria = (grande && semNumeroNaDiretoria) ? OF.PAL : trein;
+        r.abordagem = 'Ainda no começo. A análise gratuita no ARK mostra o tamanho do impacto e cria a urgência; a capacitação vem em seguida.';
+      }
+
+      // Sinais para o comercial
+      if (a.cargo === 'Sócio ou diretor' || a.cargo === 'Diretor financeiro ou CFO') r.sinais.push('Fala com decisor');
+      if (a.saldo === 'Sim, valor relevante' || a.nec === 'Transformar créditos em caixa') r.sinais.push('Crédito acumulado: levar para a análise de créditos');
+      if (a.diretoria !== 'Sim, com números' && grande) r.sinais.push('Diretoria sem números: cabe palestra');
+      if (a.prazo === 'Ainda em 2026' || a.prazo === 'Até março de 2027') r.sinais.push('Prazo curto');
+      if (a.regime === 'Simples Nacional' && a.org !== 'Escritório contábil') r.sinais.push('Simples: avaliar regime híbrido');
+      if (a.nec === 'Medir o impacto com os números da empresa' && r.principal !== OF.ARK) r.sinais.push('Pediu medição com números');
+      if (has(a.dores, 'Split payment')) r.sinais.push('Dor em split payment');
+      if (has(a.dores, 'ERP, sistemas e notas fiscais')) r.sinais.push('Dor em ERP e DFe');
+      if (a.equipe === 'É terceirizado') r.sinais.push('Fiscal terceirizado: envolver o contador');
+
+      // Temperatura (0 a 12)
+      var pts = 0;
+      pts += { 'Ainda em 2026': 3, 'Até março de 2027': 2, 'Ao longo de 2027': 1 }[a.prazo] || 0;
+      pts += { 'Sócio ou diretor': 2, 'Diretor financeiro ou CFO': 2, 'Controller ou gerente financeiro': 1, 'Gerente ou analista fiscal': 1, 'Contador': 1 }[a.cargo] || 0;
+      pts += { 'Acima de R$ 300 milhões': 3, 'De R$ 50 a 300 milhões': 2, 'De R$ 4,8 a 50 milhões': 1 }[a.fat] || 0;
+      if (a.saldo === 'Sim, valor relevante') pts += 2;
+      if (mapeando) pts += 1;
+      if (a.nec !== 'Entender melhor antes de decidir') pts += 1;
+      r.temperatura = (pts >= 8 ? 'Quente' : pts >= 5 ? 'Morno' : 'Frio') + ' (' + pts + '/12)';
+
+      return r;
+    }
+
+    // Texto do próximo passo que o lead vê
+    var LEAD_COPY = {};
+    LEAD_COPY[OF.ARK]     = ['Medir o impacto com os números da {empresa}', 'Uma análise sem custo na plataforma ARK mostra quanto a empresa pagaria nos cenários da transição e se existem créditos acumulados que podem virar caixa.'];
+    LEAD_COPY[OF.IC]      = ['Capacitar a equipe que está conduzindo a transição', 'O mapeamento já começou. O próximo passo é a equipe dominar as regras novas para sustentar no dia a dia o que ele apontar, num treinamento fechado para a {empresa} com os professores da Jornada Tax.'];
+    LEAD_COPY[OF.GC_EQ]   = ['Capacitar quem está conduzindo a transição', 'O mapeamento já começou. O próximo passo é quem cuida do fiscal dominar as regras novas, com o Guia Completo da Reforma Tributária, aulas ao vivo e grupo de dúvidas com os professores.'];
+    LEAD_COPY[OF.MENT]    = ['Acompanhamento na implementação', 'Horas com os especialistas da Jornada Tax para revisar decisões, validar o que já foi feito e destravar os pontos que travam a implementação na {empresa}.'];
+    LEAD_COPY[OF.ESC]     = ['Preparar o escritório para atender os clientes em 2027', 'Formação da equipe com o Guia Completo da Reforma Tributária e as ferramentas da Jornada Tax para responder as dúvidas que os clientes já estão trazendo.'];
+    LEAD_COPY[OF.PARC]    = ['Conversar sobre parceria', 'Formação técnica com a Jornada Tax e um modelo de parceria para levar análise e ferramentas da Reforma aos seus clientes.'];
+    LEAD_COPY[OF.SIMPLES] = ['Entender o que muda no Simples Nacional', 'O Guia do Simples Nacional mostra o efeito da Reforma em quem está no regime e na relação com clientes e fornecedores que tomam crédito.'];
+    LEAD_COPY[OF.GC]      = ['Entender a Reforma de ponta a ponta', 'O Guia Completo da Reforma Tributária cobre a transição inteira, com aulas ao vivo e grupo de dúvidas com os professores da Jornada Tax.'];
+
+    function render(a, r) {
+      var copy = LEAD_COPY[r.principal] || LEAD_COPY[OF.ARK];
+      var emp = a.empresa || 'sua empresa';
+      document.getElementById('r-offer').textContent = copy[0].replace('{empresa}', emp);
+      document.getElementById('r-offer-text').textContent = copy[1].replace('{empresa}', emp);
+      var first = a.nome.split(/\s+/)[0];
+      document.getElementById('r-title').textContent = 'Obrigado, ' + first + '. Diagnóstico recebido.';
+      var seen = ['Preparação: ' + a.estagio.toLowerCase()];
+      a.dores.forEach(function (d) { seen.push(d); });
+      if (a.risco && a.risco !== 'Ainda não sei avaliar') seen.push('Maior risco: ' + a.risco.toLowerCase());
+      var ul = document.getElementById('r-seen');
+      ul.innerHTML = '';
+      seen.forEach(function (s) { var li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+    }
+
+    // ── Envio ───────────────────────────────────────────────────────────
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (!validate(cur)) return;
+      if (cur < steps.length - 1) { show(cur + 1); return; }
+
+      var a = {
+        nome:        document.getElementById('nome').value.trim(),
+        empresa:     document.getElementById('empresa').value.trim(),
+        email:       document.getElementById('email').value.trim(),
+        whatsapp:    tel.value.trim(),
+        cargo:       one('cargo'),
+        org:         one('org'),
+        regime:      one('regime'),
+        fat:         one('fat'),
+        segmento:    one('segmento'),
+        equipe:      one('equipe'),
+        estagio:     one('estagio'),
+        apoio:       many('apoio'),
+        dores:       many('dores'),
+        saldo:       one('saldo'),
+        risco:       one('risco'),
+        diretoria:   one('diretoria'),
+        nec:         one('nec'),
+        prazo:       one('prazo'),
+        comentarios: document.getElementById('comentarios').value.trim(),
+        consent:     document.getElementById('consent').checked ? 'Sim' : '',
+        news:        document.getElementById('news').checked ? 'Sim' : 'Não',
+        origem:      origem()
+      };
+      var r = qualificar(a);
+
+      var data = Object.assign({}, a, {
+        apoio:       a.apoio.join('; '),
+        dores:       a.dores.join('; '),
+        temperatura: r.temperatura,
+        principal:   r.principal,
+        secundaria:  r.secundaria || '-',
+        abordagem:   r.abordagem,
+        sinais:      r.sinais.join('; ') || '-',
+        rota:        r.rota
+      });
+
+      btnNext.disabled = true;
+      btnNext.textContent = 'Enviando...';
+
+      // Envio "cego" (no-cors): o Google não devolve confirmação legível,
+      // por isso o resultado aparece logo em seguida.
+      var fd = new FormData();
+      Object.keys(ENTRY).forEach(function (k) { fd.append(ENTRY[k], data[k] == null ? '' : data[k]); });
+      fetch(GOOGLE_FORM, { method: 'POST', mode: 'no-cors', body: fd })
+        .catch(function () {})
+        .then(function () {
+          render(a, r);
+          card.classList.add('done');
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('result').focus({ preventScroll: true });
+        });
+    });
+
+    show(0);
+    window.scrollTo(0, 0);
+  })();
+</script>
+</body>
+</html>
